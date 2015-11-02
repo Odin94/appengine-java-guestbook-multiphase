@@ -1,20 +1,3 @@
-/**
- * Copyright 2014-2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-//[START all]
 package com.example.guestbook;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -34,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.googlecode.objectify.ObjectifyService;
+
+import java.util.List;
 
 /**
  * Form Handling Servlet
@@ -64,7 +49,22 @@ public class SignGuestbookServlet extends HttpServlet {
     // will immediately get a new page using redirect and we want the data to be present.
     ObjectifyService.ofy().save().entity(greeting).now();
 
+    com.googlecode.objectify.Key<Guestbook> theBook = com.googlecode.objectify.Key.create(Guestbook.class, guestbookName);  // Creating the Ancestor key
+    
+    
+    List<Greeting> greetings = ObjectifyService.ofy()
+          .load()
+          .type(Greeting.class) // We want only Greetings
+          .ancestor(theBook)    // Anyone in this book
+          .order("-date")       // Most recent first - date is indexed.
+          .list();
+    
+    int deletion_cap = 0;
+    while (greetings.size() > 5 && deletion_cap < 20) {
+        ObjectifyService.ofy().delete().entity(greetings.get(greetings.size()-1)).now(); // keep deleting oldest entry until only 5 remain
+        greetings = ObjectifyService.ofy().load().type(Greeting.class).ancestor(theBook).order("-date").list();
+        deletion_cap++;
+    }
     resp.sendRedirect("/guestbook.jsp?guestbookName=" + guestbookName);
-  }
 }
-//[END all]
+}
