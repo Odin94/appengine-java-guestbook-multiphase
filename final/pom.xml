@@ -15,19 +15,23 @@
         <gcloud.plugin.version>2.0.9.74.v20150814</gcloud.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+        <restlet.version>2.3.5</restlet.version>
     </properties>
 
     <prerequisites>
         <maven>3.1.0</maven>
     </prerequisites>
+    
+    <repositories>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.com</url>
+        </repository> 
+    </repositories>
 
     <dependencies>
         <!-- Compile/runtime dependencies -->
-        <dependency>
-            <groupId>com.googlecode.objectify</groupId>
-            <artifactId>objectify</artifactId>
-            <version>4.0.1</version>
-        </dependency>
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
@@ -44,6 +48,38 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.objectify</groupId>
+            <artifactId>objectify</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet.ext.servlet</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+        
+        <!--
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet.ext.javamail</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.gae</groupId>
+            <artifactId>org.restlet.ext.net</artifactId>
+            <version>${restlet.version}</version>
+        </dependency>
+        -->
+
+
 
         <!-- Test Dependencies -->
         <dependency>
@@ -80,11 +116,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <version>3.1</version>
+                <version>3.2</version>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>7</source>
+                    <target>7</target>
                 </configuration>
             </plugin>
             <plugin>
